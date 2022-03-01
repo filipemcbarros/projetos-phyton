@@ -23,6 +23,10 @@ def subDirNameFinder(dirPath, depth):
     listSubDir = dirPath.split('/')
     return listSubDir[depth]
 
+def openDocument(path):
+    file = open(path, "rb")
+    return file
+
 def getCompleteDataDocument(file):
     pdf_reader = pdf.PdfFileReader(file)
     dataDoc = ""
@@ -31,15 +35,18 @@ def getCompleteDataDocument(file):
         dataDoc += page.extractText()
     return dataDoc
 
-def arrangeProcessGroup(sentencaPath, processos):
-    nomeGrupoProcesso = subDirNameFinder(sentencaPath, 4)
+def arrangeProcessGroup(filePath, processos):
+    nomeGrupoProcesso = subDirNameFinder(filePath, 4)
 
+    file = openDocument(filePath)
+    dataDoc = getCompleteDataDocument(file)
+    
     if nomeGrupoProcesso == 'julgados_conciliacao':
-      processos[0].append(sentencaPath)
-    elif nomeGrupoProcesso == 'julgador_exceto_conciliacao':
-      processos[1].append(sentencaPath)
+      processos[0].append(dataDoc)
+    elif nomeGrupoProcesso == 'julgados_exceto_conciliacao':
+      processos[1].append(dataDoc)
     elif nomeGrupoProcesso == 'remetidos_cejusc':
-      processos[2].append(sentencaPath)
+      processos[2].append(dataDoc)
     
     return processos
 
@@ -53,11 +60,3 @@ def arrangeProcessGroup(sentencaPath, processos):
 
 #subDirName = subDirNameFinder(path, 3)
 #print(subDirName)
-
-""""
-file = open("D:/Mestrado TI 2022.1/Bases de dados/Extração Processos PJe/julgados exceto por conciliação 2020-2021/0000001-61.2021.5.08.0111/Petição Inicial_c91c2b5.pdf", "rb")
-dataDoc = getCompleteDataDocument(file)
-dataDoc = Data_clean.clean_text_round1(dataDoc)
-dataDoc = Data_clean.clean_text_round2(dataDoc)
-print(dataDoc)
-"""
