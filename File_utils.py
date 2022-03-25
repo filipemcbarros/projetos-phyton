@@ -1,6 +1,6 @@
 import os
 import PyPDF2 as pdf
-import Data_clean
+from pathlib import Path
 
 def pathFilesFinder(path, listSubPathSentencas, pattern, typeFile):
     
@@ -49,6 +49,13 @@ def arrangeProcessGroup(filePath, processos):
       processos[2].append(dataDoc)
     
     return processos
+
+def createTxtCorpus(data, nomeArquivo):
+    txtFile = Path('D:/Mestrado TI 2022.1/projetos phyton/corpus/' + nomeArquivo + '.txt')
+    txtFile.touch(exist_ok=True)
+    file = open(txtFile, 'w')
+    file.writelines(data)
+    file.close()   
 
 ##################
 ##   Exemplos   ##
