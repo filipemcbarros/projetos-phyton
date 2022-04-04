@@ -50,9 +50,12 @@ def arrangeProcessGroup(filePath, processos):
     
     return processos
 
-def createTxtCorpus(data, nomeArquivo):
-    txtFile = Path('D:/Mestrado TI 2022.1/projetos phyton/corpus/' + nomeArquivo + '.txt')
+def createTxtCorpus(data, pathCorpus, nomeArquivo):
+    txtFile = Path('D:/Mestrado TI 2022.1/projetos phyton/' + pathCorpus + '/' + nomeArquivo + '.txt')
     txtFile.touch(exist_ok=True)
+    
+    #"a":  The texts will be inserted at the current file stream position, default at the end of the file.
+    #"w": The file will be emptied before the texts will be inserted at the current file stream position, default 0.
     file = open(txtFile, 'w')
     file.writelines(data)
     file.close()   

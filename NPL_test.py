@@ -1,6 +1,7 @@
 import PyPDF2 as pdf
 import os
 import File_utils
+import Data_clean as dtclean
 import pandas as pd
 import nltk
 nltk.download('stopwords')
@@ -19,11 +20,12 @@ sentencasPath = File_utils.pathFilesFinder(pathRoot, [], "senten", ".pdf")
 #for sentencaPath in sentencasPath:    
 #    processos = File_utils.arrangeProcessGroup(sentencaPath, processos)
 
-sentencaPath = sentencasPath[0]    
+sentencaPath = sentencasPath[0]
 file = open(sentencaPath, "rb")
 
 dataFile = File_utils.getCompleteDataDocument(file)
-File_utils.createTxtCorpus(dataFile, 'teste')
+cleanDtFile = dtclean.clean_text_round1(dataFile)
+File_utils.createTxtCorpus(cleanDtFile, 'corpus_sentecas', File_utils.subDirNameFinder(sentencaPath, 5))
 
 #palavras = corpus.words()
 #stop_words = stopwords.words('portuguese')
