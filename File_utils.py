@@ -1,4 +1,5 @@
 import os
+import csv
 import PyPDF2 as pdf
 from pathlib import Path
 
@@ -35,17 +36,24 @@ def getCompleteDataDocument(file):
         dataDoc += page.extractText()
     return dataDoc
 
-def arrangeProcessGroup(filePath, processos):
-    nomeGrupoProcesso = subDirNameFinder(filePath, 4)
+def isConciliado(filePath):
+   return subDirNameFinder(filePath, 4) == 'julgados_conciliacao'
 
+def isExcetoConciliado(filePath):
+   return subDirNameFinder(filePath, 4) == 'julgados_exceto_conciliacao'
+
+def isRemetidoCejuscConciliado(filePath):
+   return subDirNameFinder(filePath, 4) == 'remetidos_cejusc'
+
+def arrangeProcessGroup(filePath, processos):
     file = openDocument(filePath)
     dataDoc = getCompleteDataDocument(file)
     
-    if nomeGrupoProcesso == 'julgados_conciliacao':
+    if isConciliado():
       processos[0].append(dataDoc)
-    elif nomeGrupoProcesso == 'julgados_exceto_conciliacao':
+    elif isExcetoConciliado:
       processos[1].append(dataDoc)
-    elif nomeGrupoProcesso == 'remetidos_cejusc':
+    elif isRemetidoCejuscConciliado:
       processos[2].append(dataDoc)
     
     return processos
@@ -58,7 +66,15 @@ def createTxtCorpus(data, pathCorpus, nomeArquivo):
     #"w": The file will be emptied before the texts will be inserted at the current file stream position, default 0.
     file = open(txtFile, 'w')
     file.writelines(data)
-    file.close()   
+    file.close()
+
+def createCsvCorpus(data, labelConciliado, pathCorpus, nomeArquivo):
+    txtFile = Path('D:/Mestrado TI 2022.1/projetos phyton/' + pathCorpus + '/' + nomeArquivo + '.csv')
+    with open(txtFile, 'w',  newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        writer.writerow(['corpus_peticao', 'conciliado'])
+        writer.writerow([data, labelConciliado])
+    csvfile.close()
 
 ##################
 ##   Exemplos   ##

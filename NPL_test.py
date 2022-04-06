@@ -15,17 +15,24 @@ processos = [julgados_conciliacao, julgados_exceto_conciliacao, remetidos_cejusc
 
 pathRoot = "D:/Mestrado TI 2022.1/Bases de dados/Extração Processos PJe 2020-2021"
 
-sentencasPath = File_utils.pathFilesFinder(pathRoot, [], "senten", ".pdf")
+peticoesPath = File_utils.pathFilesFinder(pathRoot, [], "peti", ".pdf")
 
-#for sentencaPath in sentencasPath:    
-#    processos = File_utils.arrangeProcessGroup(sentencaPath, processos)
+#for peticaoPath in peticoesPath:    
+#    processos = File_utils.arrangeProcessGroup(peticaoPath, processos)
 
-sentencaPath = sentencasPath[0]
-file = open(sentencaPath, "rb")
+peticaoPath = peticoesPath[0]
+file = open(peticaoPath, "rb")
 
 dataFile = File_utils.getCompleteDataDocument(file)
 cleanDtFile = dtclean.clean_text_round1(dataFile)
-File_utils.createTxtCorpus(cleanDtFile, 'corpus_sentecas', File_utils.subDirNameFinder(sentencaPath, 5))
+labelConciliado = 1 if File_utils.isConciliado(peticaoPath) else 0
+File_utils.createCsvCorpus(cleanDtFile, labelConciliado,'corpus_peticoes', 'testeCSV')
+
+#Com lista de peticoes
+#File_utils.createCsvCorpus(cleanDtFile, label,'corpus_peticoes', 'testeCSV')
+
+#Txt teste
+#File_utils.createTxtCorpus(processos, 'corpus_peticoes', File_utils.subDirNameFinder(peticaoPath, 5))
 
 #palavras = corpus.words()
 #stop_words = stopwords.words('portuguese')
