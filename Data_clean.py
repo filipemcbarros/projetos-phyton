@@ -12,7 +12,10 @@ def clean_text_round1(text):
     text = re.sub('\n', ' ', text)
     text = ''.join(ch for ch in unicodedata.normalize('NFKD', text) 
         if not unicodedata.combining(ch))
+    text = ''.join(c for c in unicodedata.normalize('NFD', text)
+                  if unicodedata.category(c) != 'Mn')
     text = ' '.join(text.split()) 
+    text = text.encode(encoding = 'UTF-8', errors = 'strict')
     return text
 
 #remover texto entre colchetes

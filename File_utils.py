@@ -49,12 +49,12 @@ def arrangeProcessGroup(filePath, processos):
     file = openDocument(filePath)
     dataDoc = getCompleteDataDocument(file)
     
-    if isConciliado():
+    if isConciliado(filePath):
       processos[0].append(dataDoc)
-    elif isExcetoConciliado:
+    elif isExcetoConciliado(filePath):
       processos[1].append(dataDoc)
-    elif isRemetidoCejuscConciliado:
-      processos[2].append(dataDoc)
+    #elif isRemetidoCejuscConciliado:
+    #  processos[2].append(dataDoc)
     
     return processos
 
@@ -68,12 +68,20 @@ def createTxtCorpus(data, pathCorpus, nomeArquivo):
     file.writelines(data)
     file.close()
 
-def createCsvCorpus(data, labelConciliado, pathCorpus, nomeArquivo):
+def createCsvCorpus(pathCorpus, nomeArquivo):
     txtFile = Path('D:/Mestrado TI 2022.1/projetos phyton/' + pathCorpus + '/' + nomeArquivo + '.csv')
     with open(txtFile, 'w',  newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        writer.writerow(['corpus_peticao', 'conciliado'])
-        writer.writerow([data, labelConciliado])
+        writer.writerow(['num_processo', 'corpus_peticao', 'conciliado'])
+        #writer.writerow([numProcesso, data, labelConciliado])
+    csvfile.close()
+
+def addLineCsv(numProcesso, data, labelConciliado, pathCorpus, nomeArquivo):
+    from csv import writer
+    txtFile = Path('D:/Mestrado TI 2022.1/projetos phyton/' + pathCorpus + '/' + nomeArquivo + '.csv')
+    with open(txtFile, 'a', newline='') as csvfile:
+        writer_obj = writer(csvfile, delimiter=',')
+        writer_obj.writerow([numProcesso, data, labelConciliado])
     csvfile.close()
 
 ##################

@@ -10,23 +10,32 @@ from nltk.corpus import stopwords
 
 julgados_conciliacao = []
 julgados_exceto_conciliacao = []
-remetidos_cejusc = []
-processos = [julgados_conciliacao, julgados_exceto_conciliacao, remetidos_cejusc]
+#remetidos_cejusc = []
+processos = [julgados_conciliacao, julgados_exceto_conciliacao]
 
 pathRoot = "D:/Mestrado TI 2022.1/Bases de dados/Extração Processos PJe 2020-2021"
 
 peticoesPath = File_utils.pathFilesFinder(pathRoot, [], "peti", ".pdf")
 
-#for peticaoPath in peticoesPath:    
-#    processos = File_utils.arrangeProcessGroup(peticaoPath, processos)
+File_utils.createCsvCorpus('corpus_peticoes', 'testeCSV')
 
-peticaoPath = peticoesPath[0]
-file = open(peticaoPath, "rb")
+qtdProcessos = 1
 
-dataFile = File_utils.getCompleteDataDocument(file)
-cleanDtFile = dtclean.clean_text_round1(dataFile)
-labelConciliado = 1 if File_utils.isConciliado(peticaoPath) else 0
-File_utils.createCsvCorpus(cleanDtFile, labelConciliado,'corpus_peticoes', 'testeCSV')
+for peticaoPath in peticoesPath:    
+    processos = File_utils.arrangeProcessGroup(peticaoPath, processos)
+
+    file = open(peticaoPath, "rb")
+
+    dataFile = File_utils.getCompleteDataDocument(file)
+    cleanDtFile = dtclean.clean_text_round1(dataFile)
+    labelConciliado = 1 if File_utils.isConciliado(peticaoPath) else 0
+    numProcesso = File_utils.subDirNameFinder(peticaoPath, 5)
+    File_utils.addLineCsv(numProcesso, cleanDtFile, labelConciliado,'corpus_peticoes', 'testeCSV')
+    
+    qtdProcessos = qtdProcessos + 1
+    
+    if qtdProcessos > 10:
+        break
 
 #Com lista de peticoes
 #File_utils.createCsvCorpus(cleanDtFile, label,'corpus_peticoes', 'testeCSV')
