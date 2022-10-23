@@ -46,26 +46,22 @@ def clean_text_round3(text):
     text = " ".join(tokens_stemming)
     return text
 
-#remover texto entre colchetes
-#remover texto entre parênteses
-#trocar espaços em branco duplicados em espaços em branco simples
 #remover aspas simples, aspas duplas, reticências e vírgula por espaço em branco simples
 #remover quebras de linha por espaço em branco simples
 def clean_text_extra_round(text):
-    text = re.sub('\[.*?\]', '', text)
-    text = re.sub('\(.*?\)', '', text)
-    text = ' '.join(text.split()) 
     text = re.sub('[‘’“”…,]', ' ', text)
     text = re.sub('\n', ' ', text)
-    text = text.encode(encoding = 'UTF-8', errors = 'strict')
+    #text = text.encode(encoding = 'UTF-8', errors = 'strict')
     return text
 
 #Método teste para fases da limpeza dos dados
 def test_data_clean():
-    corpus_test = 'Qual é a dificuldade? Ele poderia ter me ligado pelo telefone #12345678.'
+    corpus_test = 'Qual é a dificuldade?      Ele    poderia   ter me ligado pelo telefone ([#12345678])‘’“”…,.\n'
     print('Corpus Original:')
     print(corpus_test+'\n')
 
+    corpus_test = clean_text_extra_round(corpus_test)
+   
     corpus_test = clean_text_round1(corpus_test)
     print('Primeiro round (acentuacao, caracteres especiais, numeros e pontuacao):')
     print(corpus_test+'\n')
