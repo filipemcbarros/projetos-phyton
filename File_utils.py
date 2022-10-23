@@ -2,6 +2,13 @@ import os
 import csv
 import PyPDF2 as pdf
 from pathlib import Path
+from bs4 import BeautifulSoup
+
+def webscrap(path):
+    with open(path, 'r') as f:
+        contents = f.read()
+        soup = BeautifulSoup(contents, 'lxml')
+        print(soup)
 
 def pathFilesFinder(path, listSubPathSentencas, pattern, typeFile):
     

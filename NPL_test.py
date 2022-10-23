@@ -1,3 +1,4 @@
+from modulefinder import packagePathMap
 import PyPDF2 as pdf
 import os
 import File_utils
@@ -14,6 +15,8 @@ julgados_exceto_conciliacao = []
 processos = [julgados_conciliacao, julgados_exceto_conciliacao]
 
 pathRoot = "D:/Mestrado TI 2022.1/Bases de dados/Extração Processos PJe 2020-2021"
+teste = pathRoot + '/julgados_conciliacao/0000002-80.2020.5.08.0111/Petição Inicial_ad6475e.html'
+File_utils.webscrap(teste)
 
 peticoesPath = File_utils.pathFilesFinder(pathRoot, [], "peti", ".pdf")
 
