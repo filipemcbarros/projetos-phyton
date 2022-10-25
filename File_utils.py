@@ -36,12 +36,15 @@ def openDocument(path):
     return file
 
 def getCompleteDataDocument(file):
-    pdf_reader = pdf.PdfFileReader(file)
-    dataDoc = ""
-    for i in range(pdf_reader.getNumPages()):
-        page = pdf_reader.getPage(i)
-        dataDoc += page.extractText()
-    return dataDoc
+    try:
+        pdf_reader = pdf.PdfFileReader(file, strict = False)
+        dataDoc = ""
+        for i in range(pdf_reader.getNumPages()):
+            page = pdf_reader.getPage(i)
+            dataDoc += page.extractText()
+        return dataDoc
+    except:
+        return ''
 
 def isConciliado(filePath):
    return subDirNameFinder(filePath, 4) == 'julgados_conciliacao'
@@ -80,7 +83,6 @@ def createCsvCorpus(pathCorpus, nomeArquivo):
     with open(txtFile, 'w',  newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         writer.writerow(['num_processo', 'corpus_peticao', 'conciliado'])
-        #writer.writerow([numProcesso, data, labelConciliado])
     csvfile.close()
 
 def addLineCsv(numProcesso, data, labelConciliado, pathCorpus, nomeArquivo):

@@ -46,12 +46,19 @@ def clean_text_round3(text):
     text = " ".join(tokens_stemming)
     return text
 
-#remover aspas simples, aspas duplas, reticências e vírgula por espaço em branco simples
+#remover aspas simples, aspas duplas, reticências e vírgula
 #remover quebras de linha por espaço em branco simples
 def clean_text_extra_round(text):
-    text = re.sub('[‘’“”…,]', ' ', text)
+    text = re.sub('[‘’“”\…,n°§\']', ' ', text)
     text = re.sub('\n', ' ', text)
-    #text = text.encode(encoding = 'UTF-8', errors = 'strict')
+    return text
+
+def clean_data(text):
+    text = clean_text_extra_round(text)
+    text = clean_text_round1(text)
+    text = clean_text_round2(text)
+    text = clean_text_round3(text)
+    text = text.encode(encoding = 'UTF-8', errors = 'strict')
     return text
 
 #Método teste para fases da limpeza dos dados
@@ -78,4 +85,4 @@ def test_data_clean():
     print('Tokenizacao:')
     print(tokens)
 
-test_data_clean()
+#test_data_clean()

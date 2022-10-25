@@ -15,8 +15,8 @@ julgados_exceto_conciliacao = []
 processos = [julgados_conciliacao, julgados_exceto_conciliacao]
 
 pathRoot = "D:/Mestrado TI 2022.1/Bases de dados/Extração Processos PJe 2020-2021"
-teste = pathRoot + '/julgados_conciliacao/0000002-80.2020.5.08.0111/Petição Inicial_ad6475e.html'
-File_utils.webscrap(teste)
+#teste = pathRoot + '/julgados_conciliacao/0000002-80.2020.5.08.0111/Petição Inicial_ad6475e.html'
+#File_utils.webscrap(teste)
 
 peticoesPath = File_utils.pathFilesFinder(pathRoot, [], "peti", ".pdf")
 
@@ -30,14 +30,15 @@ for peticaoPath in peticoesPath:
     file = open(peticaoPath, "rb")
 
     dataFile = File_utils.getCompleteDataDocument(file)
-    cleanDtFile = dtclean.clean_text_round1(dataFile)
+    cleanDtFile = dtclean.clean_data(dataFile)
     labelConciliado = 1 if File_utils.isConciliado(peticaoPath) else 0
     numProcesso = File_utils.subDirNameFinder(peticaoPath, 5)
     File_utils.addLineCsv(numProcesso, cleanDtFile, labelConciliado,'corpus_peticoes', 'testeCSV')
     
+    print(qtdProcessos)
     qtdProcessos = qtdProcessos + 1
     
-    if qtdProcessos > 10:
+    if qtdProcessos > 50:
         break
 
 #Com lista de peticoes
