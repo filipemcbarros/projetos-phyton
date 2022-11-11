@@ -37,9 +37,9 @@ for peticaoPath in peticoesPath:
     
     print(qtdProcessos)
     qtdProcessos = qtdProcessos + 1
-    
-    if qtdProcessos > 50:
-        break
+
+    #if qtdProcessos > 1:
+     # break
 
 #Com lista de peticoes
 #File_utils.createCsvCorpus(cleanDtFile, label,'corpus_peticoes', 'testeCSV')
