@@ -18,8 +18,8 @@ def clean_text_round1(text):
         if not unicodedata.combining(ch))
     text = ''.join(c for c in unicodedata.normalize('NFD', text)
                   if unicodedata.category(c) != 'Mn')
-    text = re.sub('\w*\d\w*', '', text)
-    text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+    text = re.sub('\w*\d\w*', ' ', text)
+    text = re.sub('[%s]' % re.escape(string.punctuation), ' ', text)
     return text
     
 #remover stopwords (português)
@@ -28,7 +28,7 @@ def clean_text_round2(text):
     tokens = remove_one_two_character_word(tokens)
     stop_words = stopwords.words('portuguese')
     tokens_wo_stopwords = [t for t in tokens if t not in stop_words]
-    text = " ".join(tokens_wo_stopwords)
+    text = ' '.join(tokens_wo_stopwords)
 
     return text
 
@@ -48,7 +48,7 @@ def clean_text_round3(text):
     for t in tokens:
        tokens_stemming.append(stemmer.stem(t))
 
-    text = " ".join(tokens_stemming)
+    text = ' '.join(tokens_stemming)
     return text
 
 #texto caixa baixa
@@ -62,23 +62,45 @@ def clean_text_extra_round(text):
     text = text.strip('\t')
     text = clean_roman_numbers(text)
     text = re.sub("\s+", ' ', text)
+    text = text.replace("\\", ' ')
     return text
 
 def clean_roman_numbers(text):
     pattern = r"\b(?=[mdclxvii])m{0,4}(cm|cd|d?c{0,3})(xc|xl|l?x{0,3})([ii]x|[ii]v|v?[ii]{0,3})\b\.?"
     return re.sub(pattern, ' ', text)
 
+def clean_text_irrelevant_words(text):
+    spaces = re.compile(r'\s+')
+
+    word_nao = re.compile(r'\bnao\b')
+    text = spaces.sub(' ', word_nao.sub('', text))
+
+    word_art = re.compile(r'\bart\b')
+    text = spaces.sub(' ', word_art.sub('', text))
+
+    word_artigo = re.compile(r'\bartigo\b')
+    text = spaces.sub(' ', word_artigo.sub('', text))
+
+    word_cep = re.compile(r'\bcep\b')
+    text = spaces.sub(' ', word_cep.sub('', text))
+
+    word_xcb = re.compile(r'\bxcb\b')
+    text = spaces.sub(' ', word_xcb.sub('', text))
+
+    return text
+
 def clean_data(text):
     text = clean_text_extra_round(text)
     text = clean_text_round1(text)
     text = clean_text_round2(text)
     #text = clean_text_round3(text)
+    text = clean_text_irrelevant_words(text)
     text = text.encode(encoding = 'UTF-8', errors = 'strict')
     return text
 
 #Método teste para fases da limpeza dos dados
 def test_data_clean():
-    corpus_test = 'Qual é a dificuldade? \'    UBALDO NAHUM FERREIRA, estabelecida à Travessa Evandro Chagas, XXI III iii IV iv XVI  a b c d e f g h i j k l m z r s t   Ele    poderia   n°§ter me ligado pelo telefone ([#12345678])‘’“”…,.\n'
+    corpus_test = 'art. artigo não \\xcb\\x86\\xcb\\x86\\xcb\\x86 cep Qual é a dificuldade?estou.aqui.querendo,entrar \'    UBALDO NAHUM FERREIRA, estabelecida à Travessa Evandro Chagas, XXI III iii IV iv XVI  a b c d e f g h i j k l m z r s t   Ele    poderia   n°§ter me ligado pelo telefone ([#12345678])‘’“”…,.\n'
     print('Corpus Original:')
     print(corpus_test+'\n')
 
@@ -97,6 +119,10 @@ def test_data_clean():
     #corpus_test = clean_text_round3(corpus_test)
     #print('Terceiro round (stemming):')
     #print(corpus_test+'\n')
+
+    corpus_test = clean_text_irrelevant_words(corpus_test)
+    print('Final round (palavras irrelevantes):')
+    print(corpus_test+'\n')
     
     tokens = word_tokenize(corpus_test)
     print('Tokenizacao:')
